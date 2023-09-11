@@ -10,6 +10,7 @@ app.engine('hbs', hbs.engine({
     defaultLayout: 'main',
     layoutsDir: __dirname+ '/views/layouts/',
 }))
+app.use(express.static('public'));
 
 const mysql = require('mysql')
 
