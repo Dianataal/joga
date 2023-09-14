@@ -1,9 +1,7 @@
-const express = require('express');
-const router  = express.Router();
-const authorController = require('../controllers/author');
+const express = require('express')
+const router = express.Router()
+const articleController = require('../controllers/author')
 
+router.get('/author/:author_id', articleController.getAuthorName)
 
-router.get('/:id', authorController.getAuthorArticles);
-
-
-module.exports = router;
+module.exports = router

@@ -1,27 +1,29 @@
-const con = require('../utils/db');
+const con = require('../utils/db')
 
+//show article by this slug
+const getAuthorName = (req, res) => {
+    let article_query = `SELECT * FROM article, author WHERE author.id='${req.params.author_id}' AND article.author_id='${req.params.author_id}';`
+    let author_query = `SELECT name FROM author WHERE id='${req.params.author_id}';`
+    let author
+    let articles = []
 
-const getAuthorArticles = (req, res) =>  {
-    console.log(req.params)
-    let query = `SELECT * FROM article WHERE author_id="${req.params.id}"`
-    let articles
-    con.query(query, (err, result) => {
-        if (err) throw err;
+    con.query(article_query, (err, result) => {
+        if (err) throw err
         articles = result
         console.log(articles)
-        query = `SELECT * FROM author WHERE id="${req.params.id}"`
-        let author
-        con.query(query, (err, result) => {
-            if (err) throw err;
+
+        con.query(author_query, (err, result) => {
+            if (err) throw err
             author = result
             console.log(author)
             res.render('author', {
-                author: author,
-                articles: articles
+                articles: articles,
+                author: author
             })
         })
     })
-};
+}
 
-
-module.exports = {getAuthorArticles};
+module.exports = {
+    getAuthorName
+}
