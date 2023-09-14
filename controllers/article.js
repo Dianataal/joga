@@ -1,5 +1,3 @@
-const con = require('../utils/db');
-
 const Article = require('../models/article.model.js');
 
 // show all articles index page
@@ -20,15 +18,17 @@ const getAllArticles = (req, res) => {
 
 //show article by this slug
 const getArticleBySlug = (req, res) => {
-    let query = `SELECT article.*,
-       author.name AS authorName FROM article INNER JOIN author ON article`
-    let article
-    con.query(query, (err, result) => {
-        if (err) throw err;
-        article = result;
-        res.render('article', {
-            article: article
-        })
+    Article.getBySlug(req.params.slug, (err, data) => {
+        if (err) {
+            res.status(500).send({
+                message : err.message || 'Some error occurred retrieving article data'
+            })
+        } else {
+            console.log(data)
+            res.render('article', {
+                article: data
+            })
+        }
     })
 };
 
