@@ -15,7 +15,6 @@ const getAuthorName = (req, res) => {
         con.query(author_query, (err, result) => {
             if (err) throw err
             author = result
-            console.log(author)
             res.render('author', {
                 articles: articles,
                 author: author
