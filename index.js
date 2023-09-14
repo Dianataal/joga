@@ -1,35 +1,37 @@
-// application packages
-const express = require('express')
-const app = express()
+//application packages
+const express = require('express');
+const app = express();
+const path = require('path');
 
-const path = require('path')
-// add template engine
+//add template engine
 const hbs = require('express-handlebars');
-// setup template engine directory and files extensions
+
+//setup template engine directory and files extensions
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 app.engine('hbs', hbs.engine({
-    extname: 'hbs',
-    defaultLayout: 'main',
-    layoutsDir: __dirname + '/views/layouts/',
+    extname:'hbs',
+    defaultLayout:'main',
+    layoutsDir:__dirname+'/views/layouts'
 }))
 
-// setup static public directory
-app.use(express.static('public'))
+app.use(express.static('public'));
 
-const bodyParser = require('body-parser')
-app.use(bodyParser.urlencoded({extended: true}))
+const bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({extended: true}));
 
-const articleRouters = require('./routes/article')
-const authorRouter = require('./routes/author')
+//import article routers
+const articleRoutes = require('./routes/article');
 
-app.use('/', articleRouters)
-app.use('/article', articleRouters)
+//use article routes
+app.use('/', articleRoutes);
+app.use('/article', articleRoutes);
 
-app.use('/', authorRouter)
-app.use('/author', authorRouter)
-
-
-app.listen(3000, () => {
-    console.log('App started at http://localhost:3000')
-})
+const con = require('./utils/db');
+con.connect(function(err){
+    if(err) throw err;
+    console.log('connected to joga_mysql db');
+});
+app.listen(3000,() => {
+    console.log('app is started at localhost')
+});

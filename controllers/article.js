@@ -1,6 +1,9 @@
-const Article = require('../models/article.model.js');
+//import database connection
+const con = require('../utils/db');
+//import article model
+const Article = require('../models/article.model');
 
-// show all articles index page
+//get all articles
 const getAllArticles = (req, res) => {
     Article.getAll((err, data) => {
         if (err) {
@@ -16,12 +19,12 @@ const getAllArticles = (req, res) => {
     })
 };
 
-//show article by this slug
-const getArticleBySlug = (req, res) => {
+//get articles by slug
+const getArticlesBySlug = (req, res) => {
     Article.getBySlug(req.params.slug, (err, data) => {
         if (err) {
             res.status(500).send({
-                message : err.message || 'Some error occurred retrieving article data'
+                message : err.message || 'Some error occurred retrieving articles data'
             })
         } else {
             console.log(data)
@@ -30,10 +33,27 @@ const getArticleBySlug = (req, res) => {
             })
         }
     })
-};
+}
 
-//export controller functions
+//get articles by author
+const getArticlesByAuthor = (req, res) => {
+    Article.getByAuthor(req.params.author, (err, data) => {
+        if (err) {
+            res.status(500).send({
+                message: err.message || 'Some error occurred retrieving articles data'
+            })
+        } else {
+            console.log(data)
+            res.render('author', {
+                authors: data,
+                authorName: data[0].name
+            })
+        }
+    })
+}
+
 module.exports = {
     getAllArticles,
-    getArticleBySlug
-};
+    getArticlesBySlug,
+    getArticlesByAuthor
+}
