@@ -48,7 +48,7 @@ Article.getBySlug = (slug, result) => {
             console.log("found article: ", res[0]);
             result(null, res[0]);
         }
-    })
+    });
 }
 
 module.exports = Article;

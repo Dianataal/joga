@@ -1,28 +1,38 @@
-const con = require('../utils/db')
+const Author = require('../models/author.model.js');
 
-//show article by this slug
-const getAuthorName = (req, res) => {
-    let article_query = `SELECT * FROM article, author WHERE author.id='${req.params.author_id}' AND article.author_id='${req.params.author_id}';`
-    let author_query = `SELECT name FROM author WHERE id='${req.params.author_id}';`
-    let author
-    let articles = []
+// Function to get all authors and render the author list page
+const getAllAuthors = (req, res) => {
+    Author.getAll((err, data) => {
+        if (err) {
+            res.status(500).send({
+                message: err.message || 'Some error occurred retrieving authors data'
+            });
+        } else {
+            console.log(data);
+            res.render('authors', {
+                authors: data
+            });
+        }
+    });
+};
 
-    con.query(article_query, (err, result) => {
-        if (err) throw err
-        articles = result
-        console.log(articles)
-
-        con.query(author_query, (err, result) => {
-            if (err) throw err
-            author = result
+// Function to get author by ID and render the author details page
+const getAuthorById = (req, res) => {
+    Author.getById(req.params.id, (err, data) => {
+        if (err) {
+            res.status(500).send({
+                message: err.message || 'Some error occurred retrieving author data'
+            });
+        } else {
+            console.log(data);
             res.render('author', {
-                articles: articles,
-                author: author
-            })
-        })
-    })
-}
+                author: data
+            });
+        }
+    });
+};
 
 module.exports = {
-    getAuthorName
-}
+    getAllAuthors,
+    getAuthorById
+};
