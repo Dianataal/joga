@@ -4,7 +4,7 @@ const con = require('../utils/db');
 // Constructor for Author
 const Author = (author) => {
     this.name = author.name;
-    // Add other properties as needed
+
 };
 
 // Function to get all authors
