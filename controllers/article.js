@@ -74,7 +74,7 @@ const createNewArticle = (req, res) => {
             })
         } else {
                 console.log(data)
-                res.send(data)
+                res.redirect('/')
         }
     })
 };
