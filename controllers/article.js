@@ -1,5 +1,5 @@
 //import database connection
-const con = require('../utils/db');
+//const con = require('../utils/db');
 //import article model
 const Article = require('../models/article.model');
 
@@ -33,7 +33,7 @@ const getArticlesBySlug = (req, res) => {
             })
         }
     })
-}
+};
 
 //get articles by author
 const getArticlesByAuthor = (req, res) => {
@@ -50,7 +50,7 @@ const getArticlesByAuthor = (req, res) => {
             })
         }
     })
-}
+};
 
 //create new article
 
@@ -64,6 +64,7 @@ const createNewArticle = (req, res) => {
         image: req.body.image,
         body: req.body.body,
         published: new Date().toISOString().slice(0, 19).replace('T', ' '),
+        author_id: req.body.author_id
     }
     )
 
@@ -82,7 +83,7 @@ const createNewArticle = (req, res) => {
 // display article form
 const showNewArticleForm = (req, res) => {
     res.render('create_article')
-};
+}
 
 module.exports = {
     getAllArticles,
@@ -90,4 +91,4 @@ module.exports = {
     getArticlesByAuthor,
     createNewArticle,
     showNewArticleForm
-}
+};
