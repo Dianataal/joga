@@ -1,5 +1,3 @@
-//import database connection
-//const con = require('../utils/db');
 //import article model
 const Article = require('../models/article.model');
 
@@ -84,7 +82,8 @@ const createNewArticle = (req, res) => {
 
 // display article form
 const showNewArticleForm = (req, res) => {
-    res.render('create_article')
+    console.log("Showing new article form");
+    res.render('create_article');
 }
 
 // Display the edit form for an article by ID

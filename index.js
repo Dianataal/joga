@@ -24,7 +24,6 @@ app.use(bodyParser.urlencoded({extended: true}));
 const articleRoutes = require('./routes/article');
 
 //use article routes
-app.use('/', articleRoutes);
 app.use('/article', articleRoutes);
 
 const con = require('./utils/db');
