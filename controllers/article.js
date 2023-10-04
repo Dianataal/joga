@@ -1,12 +1,11 @@
-//import article model
 const Article = require('../models/article.model');
 
-//get all articles
+//show all articles - index page
 const getAllArticles = (req, res) => {
     Article.getAll((err, data) => {
         if (err) {
             res.status(500).send({
-                message : err.message || 'Some error occurred retrieving articles data'
+                message: err.message || 'Some error occurred retrieving articles data'
             })
         } else {
             console.log(data)
@@ -17,12 +16,12 @@ const getAllArticles = (req, res) => {
     })
 };
 
-//get articles by slug
-const getArticlesBySlug = (req, res) => {
+//show article by this slug
+const getArticleBySlug = (req, res) => {
     Article.getBySlug(req.params.slug, (err, data) => {
         if (err) {
             res.status(500).send({
-                message : err.message || 'Some error occurred retrieving articles data'
+                message: err.message || 'Some error occurred retrieving article data'
             })
         } else {
             console.log(data)
@@ -33,38 +32,17 @@ const getArticlesBySlug = (req, res) => {
     })
 };
 
-//get articles by author
-const getArticlesByAuthor = (req, res) => {
-    Article.getByAuthor(req.params.author, (err, data) => {
-        if (err) {
-            res.status(500).send({
-                message: err.message || 'Some error occurred retrieving articles data'
-            })
-        } else {
-            console.log(data)
-            res.render('author', {
-                authors: data,
-                authorName: data[0].name
-            })
-        }
-    })
-};
-
 //create new article
-
 const createNewArticle = (req, res) => {
-    // new article from POST data
-    console.log('new article')
-
+    //new article from POST data (example from form)
     const newArticle = new Article({
         name: req.body.name,
         slug: req.body.slug,
         image: req.body.image,
         body: req.body.body,
-        published: new Date().toISOString().slice(0, 19).replace('T', ''),
-        author_id: req.body.author_id
-    }
-    )
+        published: new Date().toISOString().slice(0, 19).replace('T', ' '),
+        author_id: req.body.author_id,
+    })
 
     Article.createNew(newArticle, (err, data) => {
         if (err) {
@@ -72,64 +50,76 @@ const createNewArticle = (req, res) => {
                 message: err.message || 'Some error occurred sending article data'
             })
         } else {
-                console.log(data)
-                res.send(data)
+            console.log(data)
+            res.redirect('/')
         }
     })
 };
-
-
-
-// display article form
-const showNewArticleForm = (req, res) => {
-    console.log("Showing new article form");
-    res.render('create_article');
-}
-
-// Display the edit form for an article by ID
-const editArticle = (req, res) => {
-    const articleId = req.params.id;
-
-    Article.showArticle(articleId, (err, article, authors) => {
+const showArticle = (req, res) => {
+    Article.getById(req.params.id, (err, data) => {
         if (err) {
-            // Handle the error appropriately
-            return res.status(500).send('Error fetching article or author data');
+            res.status(500).send({
+                message: err.message || 'Some error occurred getting article by id'
+            })
+        } else {
+            console.log(data)
+            res.render('edit', {
+                article: data
+            })
         }
-
-        // Render the edit form with article data and authors
-        res.render('edit_article', { article, authors });
-    });
-};
-
-// Update an article by ID
+    })
+}
 const updateArticle = (req, res) => {
-    const articleId = req.params.id;
-    const updatedArticleData = {
+    //update article from POST data
+    const updatedArticle = new Article({
+        id: req.params.id,
         name: req.body.name,
-        slug: req.body.slug, // You may need to generate a unique slug here
+        slug: req.body.slug,
         image: req.body.image,
         body: req.body.body,
-        author_id: req.body.author_id,
-        // ... (other article properties)
-    };
+        published: req.body.published,
+        author_id: req.body.author_id
+    })
 
-    Article.editArticle(articleId, updatedArticleData, (err, updatedArticle) => {
+    Article.updateById(updatedArticle, (err, data) => {
         if (err) {
-            // Handle the error appropriately
-            return res.status(500).send('Error updating article data');
+            res.status(500).send({
+                message: err.message || 'Some error occurred updating article data'
+            })
+        } else {
+            console.log(data)
+            //shows all the articles
+            res.redirect(`/`)
         }
+    })
+}
 
-        // Redirect to the article's page or another appropriate location
-        res.redirect(`/article/${updatedArticle.slug}`);
-    });
+const deleteArticle = (req, res) => {
+    Article.deleteById(req.params.id, (err, data) => {
+        if (err) {
+            res.status(500).send({
+                message: err.message || 'Some error occurred deleting article data'
+            })
+        } else {
+            console.log(data)
+            //shows all the articles
+            res.redirect(`/`)
+        }
+    })
+}
+
+
+//display article form
+const showNewArticleForm = (req, res) => {
+    res.render('create_article')
 };
-
+//export controller functions
 module.exports = {
     getAllArticles,
-    getArticlesBySlug,
-    getArticlesByAuthor,
+    getArticleBySlug,
     createNewArticle,
     showNewArticleForm,
-    editArticle,
-    updateArticle
+    showArticle,
+    updateArticle,
+    deleteArticle
 };
