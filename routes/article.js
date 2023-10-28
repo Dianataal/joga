@@ -12,5 +12,5 @@ router.post('/create', articleController.createNewArticle);
 router.get('/article/edit/:id', articleController.showArticle);
 router.post('/article/edit/:id', articleController.updateArticle);
 router.post('/article/delete/:id', articleController.deleteArticle);
-
+//export article router for using in default application file
 module.exports = router;

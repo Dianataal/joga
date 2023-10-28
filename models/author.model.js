@@ -2,31 +2,40 @@
 const con = require('../utils/db');
 
 //constructor
+
 const Author = (author) => {
-    this.author_id = author.author_id
     this.author_name = author.author_name
+    this.author_id = author.id
 };
 
-//get author by author_id
-Author.getAuthor = (author_id, result) => {
-    let getAuthorQuery = `SELECT article.*, author.author_name FROM article INNER JOIN author ON article.author_id = author.id WHERE author.id = ?;`;
-    con.query(getAuthorQuery, [author_id], (err, res) => {
+Author.getName = (author_id, result) => {
+    let article_query = `SELECT * FROM article, author WHERE author.id='${author_id}' AND article.author_id=author.id;`
+
+    let author_query = `SELECT author_name FROM author WHERE author.id=\'${author_id}';`
+
+    let author
+    let articles = []
+
+    con.query (article_query,(err, res) => {
         if (err) {
-            console.log("Error in Author.getAuthor: ", err);
+            console.log("error: ", err);
             result(err, null);
             return;
         }
 
-        if (res.length) {
-            const authorData = {
-                author_id: res[0].id,
-                author_name: res[0].author_name,
-                articles: res,
-            };
-            console.log("Author.getAuthor returned the following data: ", authorData);
-            result(null, authorData);
-        }
-    });
-};
+        articles = res
+        console.log("articles: ", articles);
 
+        con.query(author_query, (err, res) => {
+            if (err) {
+                console.log('error: ', err)
+                result(err, null)
+                return
+            }
+            author = res
+            console.log('author: ', author)
+            result(null, author, articles)
+        })
+    })
+};
 module.exports = Author;

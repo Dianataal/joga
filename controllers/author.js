@@ -1,22 +1,25 @@
-//show author by this slug
-const Author = require('../models/author.model');
+// import database connection
+const Author = require('../models/author.model')
 
+
+// show author articles
 const getAuthorArticle = (req, res) => {
-    Author.getAuthor(req.params.author_id, (err, data) => {
+    Author.getName(req.params.id,(err, author, articles) => {
         if (err) {
             res.status(500).send({
-                message : err.message || 'Some error occurred retrieving articles data'
+                message :err.message || 'Big error go boom'
             })
         } else {
+            console.log(author, articles)
             res.render('author', {
-                author: data.articles,
-                author_name: data.author_name
+                articles: articles,
+                author: author
             })
         }
     })
 };
 
-//export controller functions
+// export controller functions
 module.exports = {
     getAuthorArticle
 };
